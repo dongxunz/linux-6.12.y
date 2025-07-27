@@ -378,13 +378,13 @@
 	interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
 	interrupt-names = "macirq";
 	clocks = <&cru SCLK_MAC>, <&cru SCLK_MAC_RX>,
-		<&cru SCLK_MAC_TX>, <&cru SCLK_MAC_REF>,
-		<&cru SCLK_MAC_REFOUT>, <&cru ACLK_GMAC>,
-		<&cru PCLK_GMAC>;
+		 <&cru SCLK_MAC_TX>, <&cru SCLK_MACREF>,
+		 <&cru SCLK_MACREF_OUT>, <&cru ACLK_GMAC>,
+		 <&cru PCLK_GMAC>;
 	clock-names = "stmmaceth", "mac_clk_rx",
-		"mac_clk_tx", "clk_mac_ref",
-		"clk_mac_refout", "aclk_mac",
-		"pclk_mac";
+		  "mac_clk_tx", "clk_mac_ref",
+		  "clk_mac_refout", "aclk_mac",
+		  "pclk_mac";
 	resets = <&cru SRST_A_GMAC>;
 	reset-names = "stmmaceth";
 	power-domains = <&power RK3399_PD_GMAC>;
