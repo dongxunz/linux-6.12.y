@@ -375,7 +375,7 @@
 	compatible = "rockchip,rk3399-gmac";
 	reg = <0x0 0xfe300000 0x0 0x10000>;
 	rockchip,grf = <&grf>;
-	interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH 0>;
+	interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
 	interrupt-names = "macirq";
 	clocks = <&cru SCLK_MAC>, <&cru SCLK_MAC_RX>,
 		<&cru SCLK_MAC_TX>, <&cru SCLK_MAC_REF>,
