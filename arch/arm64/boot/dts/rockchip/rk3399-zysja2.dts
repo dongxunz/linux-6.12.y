@@ -338,6 +338,8 @@
 	status = "okay";
 };
 
+/* 
+ * ZYSJA使用的是千兆以太网控制器
 &gmac {
 	assigned-clocks = <&cru SCLK_RMII_SRC>;
 	assigned-clock-parents = <&clkin_gmac>;
@@ -363,6 +365,55 @@
 			reset-assert-us = <10000>;
 			reset-deassert-us = <30000>;
 			reset-gpios = <&gpio3 RK_PB7 GPIO_ACTIVE_LOW>; // bsp
+		};
+	};
+};
+ */
+
+// ZYSJA2使用的是百兆以太网收发器
+&gmac {
+	compatible = "rockchip,rk3399-gmac";
+	reg = <0x0 0xfe300000 0x0 0x10000>;
+	rockchip,grf = <&grf>;
+	interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH 0>;
+	interrupt-names = "macirq";
+	clocks = <&cru SCLK_MAC>, <&cru SCLK_MAC_RX>, <&cru SCLK_MAC_TX>,
+		 <&cru SCLK_MAC_REF>, <&cru SCLK_MAC_REFOUT>,
+		 <&cru ACLK_GMAC>, <&cru PCLK_GMAC>;
+	clock-names = "stmmaceth", "mac_clk_rx", "mac_clk_tx",
+		     "clk_mac_ref", "clk_mac_refout",
+		     "aclk_mac", "pclk_mac";
+	resets = <&cru SRST_A_GMAC>;
+	reset-names = "stmmaceth";
+	power-domains = <&power RK3399_PD_GMAC>;
+	status = "okay";
+	phy-supply = <&vcc_phy>;              // 原配置phy-supply=<0x16>
+	phy-mode = "rmii";                    // 指定RMII接口
+	clock_in_out = "output";              // 时钟输出模式
+	assigned-clocks = <&cru SCLK_RMII_SRC>;
+	assigned-clock-parents = <&clkin_gmac>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&rmii_pins>;            // 替换原pinctrl-0=<0x19>
+	tx_delay = <0x30>;                   // 保持原值
+	rx_delay = <0x20>;                   // 保持原值
+	max-speed = <100>;                   // 0x64=100Mbps
+	phy-handle = <&rtl8201f>;            // 引用PHY节点
+
+	mdio {
+		compatible = "snps,dwmac-mdio";
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		rtl8201f: ethernet-phy@0 {
+			compatible = "ethernet-phy-id001c.c816", // RTL8201F PHY ID
+				     "ethernet-phy-ieee802.3-c22";
+			reg = <0>;                      // PHY地址0
+			reset-gpios = <&gpio0 15 GPIO_ACTIVE_LOW>; // 原snps,reset-gpio=<0x17 0x0f>
+			reset-assert-us = <0>;          // 原snps,reset-delays-us第1值
+			reset-deassert-us = <10000>;    // 原snps,reset-delays-us第2值(0x2710=10000)
+			reset-delays-us = <0>, <10000>, <50000>; // 完整复位时序
+			interrupt-parent = <&gpio3>;    // 根据硬件连接补充
+			interrupts = <RK_PB2 IRQ_TYPE_LEVEL_LOW>;
 		};
 	};
 };
