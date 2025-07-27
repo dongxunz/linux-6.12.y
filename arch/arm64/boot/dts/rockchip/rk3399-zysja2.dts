@@ -389,17 +389,17 @@
 	reset-names = "stmmaceth";
 	power-domains = <&power RK3399_PD_GMAC>;
 	status = "okay";
-	phy-supply = <&vcc_phy>;              // 原配置phy-supply=<0x16>
-	phy-mode = "rmii";                    // 指定RMII接口
-	clock_in_out = "output";              // 时钟输出模式
+	phy-supply = <&vcc_phy>;		// 原配置phy-supply=<0x16>
+	phy-mode = "rmii";			// 指定RMII接口
+	clock_in_out = "output";		// 时钟输出模式
 	assigned-clocks = <&cru SCLK_RMII_SRC>;
 	assigned-clock-parents = <&clkin_gmac>;
 	pinctrl-names = "default";
-	pinctrl-0 = <&rmii_pins>;            // 替换原pinctrl-0=<0x19>
-	tx_delay = <0x30>;                   // 保持原值
-	rx_delay = <0x20>;                   // 保持原值
-	max-speed = <100>;                   // 0x64=100Mbps
-	phy-handle = <&rtl8201f>;            // 引用PHY节点
+	pinctrl-0 = <&rmii_pins>;		// 替换原pinctrl-0=<0x19>
+	tx_delay = <0x30>;			// 保持原值
+	rx_delay = <0x20>;			// 保持原值
+	max-speed = <100>;			// 0x64=100Mbps
+	phy-handle = <&rtl8201f>;		// 引用PHY节点
 
 	mdio {
 		compatible = "snps,dwmac-mdio";
@@ -408,12 +408,12 @@
 
 		rtl8201f: ethernet-phy@0 {
 			compatible = "ethernet-phy-id001c.c816";	// RTL8201F PHY ID
-			reg = <0>;                      		// PHY地址0
-			reset-gpios = <&gpio0 15 GPIO_ACTIVE_LOW>; 	// 原snps,reset-gpio=<0x17 0x0f>
-			reset-assert-us = <0>;          		// 原snps,reset-delays-us第1值
-			reset-deassert-us = <10000>;    		// 原snps,reset-delays-us第2值(0x2710=10000)
-			reset-delays-us = <0>, <10000>, <50000>; 	// 完整复位时序
-			interrupt-parent = <&gpio3>;    		// 根据硬件连接补充
+			reg = <0>;					// PHY地址0
+			reset-gpios = <&gpio0 15 GPIO_ACTIVE_LOW>;	// 原snps,reset-gpio=<0x17 0x0f>
+			reset-assert-us = <0>;				// 原snps,reset-delays-us第1值
+			reset-deassert-us = <10000>;			// 原snps,reset-delays-us第2值(0x2710=10000)
+			reset-delays-us = <0>, <10000>, <50000>;	// 完整复位时序
+			interrupt-parent = <&gpio3>;			// 根据硬件连接补充
 			interrupts = <RK_PB2 IRQ_TYPE_LEVEL_LOW>;
 		};
 	};
