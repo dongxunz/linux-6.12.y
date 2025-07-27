@@ -405,14 +405,13 @@
 		#size-cells = <0>;
 
 		rtl8201f: ethernet-phy@0 {
-			compatible = "ethernet-phy-id001c.c816", // RTL8201F PHY ID
-				     "ethernet-phy-ieee802.3-c22";
-			reg = <0>;                      // PHY地址0
-			reset-gpios = <&gpio0 15 GPIO_ACTIVE_LOW>; // 原snps,reset-gpio=<0x17 0x0f>
-			reset-assert-us = <0>;          // 原snps,reset-delays-us第1值
-			reset-deassert-us = <10000>;    // 原snps,reset-delays-us第2值(0x2710=10000)
-			reset-delays-us = <0>, <10000>, <50000>; // 完整复位时序
-			interrupt-parent = <&gpio3>;    // 根据硬件连接补充
+			compatible = "ethernet-phy-id001c.c816";	// RTL8201F PHY ID
+			reg = <0>;                      		// PHY地址0
+			reset-gpios = <&gpio0 15 GPIO_ACTIVE_LOW>; 	// 原snps,reset-gpio=<0x17 0x0f>
+			reset-assert-us = <0>;          		// 原snps,reset-delays-us第1值
+			reset-deassert-us = <10000>;    		// 原snps,reset-delays-us第2值(0x2710=10000)
+			reset-delays-us = <0>, <10000>, <50000>; 	// 完整复位时序
+			interrupt-parent = <&gpio3>;    		// 根据硬件连接补充
 			interrupts = <RK_PB2 IRQ_TYPE_LEVEL_LOW>;
 		};
 	};
