@@ -370,6 +370,7 @@
 };
  */
 
+/*
 // ZYSJA2使用的是百兆以太网收发器
 &gmac {
 	compatible = "rockchip,rk3399-gmac";
@@ -417,6 +418,34 @@
 			interrupts = <RK_PB2 IRQ_TYPE_LEVEL_LOW>;
 		};
 	};
+};
+*/
+
+ethernet@fe300000 {
+	compatible = "rockchip,rk3399-gmac";
+	reg = <0x00 0xfe300000 0x00 0x10000>;
+	rockchip,grf = <0x14>;
+	interrupts = <0x00 0x0c 0x04 0x00>;
+	interrupt-names = "macirq";
+	clocks = <0x08 0x69 0x08 0x67 0x08 0x68 0x08 0x66 0x08 0x6a 0x08 0xd5 0x08 0x166>;
+	clock-names = "stmmaceth\0mac_clk_rx\0mac_clk_tx\0clk_mac_ref\0clk_mac_refout\0aclk_mac\0pclk_mac";
+	resets = <0x08 0x89>;
+	reset-names = "stmmaceth";
+	power-domains = <0x15 0x16>;
+	status = "okay";
+	phy-supply = <0x16>;
+	phy-mode = "rmii";
+	clock_in_out = "output";
+	snps,reset-gpio = <0x17 0x0f 0x01>;
+	snps,reset-active-low;
+	snps,reset-delays-us = <0x00 0x2710 0xc350>;
+	assigned-clocks = <0x08 0xa6>;
+	assigned-clock-parents = <0x18>;
+	pinctrl-names = "default";
+	pinctrl-0 = <0x19>;
+	tx_delay = <0x30>;
+	rx_delay = <0x20>;
+	max-speed = <0x64>;
 };
 
 &hdmi {
