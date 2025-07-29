@@ -339,6 +339,13 @@
 };
 
 &gmac {
+	// 新增以下复位配置
+	resets = <&cru SRST_A_GMAC>;		// 根据SoC手册确定复位控制器名称
+	reset-names = "stmmaceth";		// 标准复位名称
+	snps,reset-active-low;			// 复位信号低电平有效（根据硬件调整）
+	snps,reset-delays-us = <0 10000 50000>;	// 复位时序：延迟、脉宽、释放后延迟
+	assigned-clock-rates = <50000000>;	// RMII必须的50MHz时钟
+
 	assigned-clocks = <&cru SCLK_RMII_SRC>;
 	assigned-clock-parents = <&clkin_gmac>;
 	clock_in_out = "output";
