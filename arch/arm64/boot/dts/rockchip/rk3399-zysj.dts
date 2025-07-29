@@ -338,15 +338,13 @@
 	status = "okay";
 };
 
-/* 
- * ZYSJA使用的是千兆以太网控制器
 &gmac {
 	assigned-clocks = <&cru SCLK_RMII_SRC>;
 	assigned-clock-parents = <&clkin_gmac>;
-	clock_in_out = "input";
+	clock_in_out = "output";
 	phy-supply = <&vcc_phy>;
-	phy-mode = "rgmii";
-	phy-handle = <&rtl8211e>;
+	phy-mode = "rmii";
+	phy-handle = <&rtl8201f>;
 	pinctrl-names = "default";
 	pinctrl-0 = <&rgmii_pins>, <&phy_intb>, <&phy_rstb>;
 	tx_delay = <0x30>;
@@ -358,7 +356,8 @@
 		#address-cells = <1>;
 		#size-cells = <0>;
 
-		rtl8211e: ethernet-phy@1 {
+		rtl8201f: ethernet-phy@1 {
+			compatible = "ethernet-phy-id001c.c816";	// RTL8201F PHY ID
 			reg = <1>;
 			interrupt-parent = <&gpio3>;
 			interrupts = <RK_PB2 IRQ_TYPE_LEVEL_LOW>;
@@ -368,7 +367,6 @@
 		};
 	};
 };
- */
 
 /*
 // ZYSJA2使用的是百兆以太网收发器
@@ -421,6 +419,7 @@
 };
 */
 
+/*
 &gmac {
 	compatible = "rockchip,rk3399-gmac";
 	reg = <0x00 0xfe300000 0x00 0x10000>;
@@ -447,6 +446,7 @@
 	rx_delay = <0x20>;
 	max-speed = <0x64>;
 };
+*/
 
 &hdmi {
 	ddc-i2c-bus = <&i2c3>;
