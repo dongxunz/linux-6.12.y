@@ -301,7 +301,7 @@
 
 	sdmmc0 {
 		sdmmc0_clk: sdmmc0-clk {
-		rockchip,pins = <1 RK_PA6 1 &pcfg_pull_none>;
+			rockchip,pins = <1 RK_PA6 1 &pcfg_pull_none>;
 		};
 		sdmmc0_cmd: sdmmc0-cmd {
 			rockchip,pins = <1 RK_PA4 1 &pcfg_pull_up>;
