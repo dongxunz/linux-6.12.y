@@ -13,7 +13,7 @@
  	aliases {
 		mmc0 = &emmc;
 		mmc1 = &sdmmc;
-		mmc2 = &sdio;
+		// mmc2 = &sdio;
 	};
 
 	chosen {
@@ -21,6 +21,7 @@
 		stdout-path = "serial2:1500000n8";
 	};
 
+	/*
 	leds {
 		status = "okay";
 		compatible = "gpio-leds";
@@ -37,12 +38,20 @@
 			default-state = "on";
 		};
 	};
+	*/
 
 	gmac_clkin: external-gmac-clock {
 		compatible = "fixed-clock";
 		clock-frequency = <125000000>;
 		clock-output-names = "gmac_clkin";
 		#clock-cells = <0>;
+	};
+
+	sdio_pwrseq: sdio-pwrseq {
+		compatible = "mmc-pwrseq-simple";
+		pinctrl-names = "default";
+		pinctrl-0 = <&wifi_enable_h>;
+		reset-gpios = <&gpio0 18 GPIO_ACTIVE_LOW>;	/* WIFI,poweren_gpio */
 	};
 
 	vcc_sys_12v: vcc-sys-12v-regulator {
@@ -171,38 +180,52 @@
 	status = "okay";
 };
 
+/* SDIO控制器配置 */
+&rksdmmc {
+	status = "okay";
+	#address-cells = <1>;
+	#size-cells = <0>;
+	pinctrl-names = "default", "idle";
+	pinctrl-0 = <&sdmmc0_clk &sdmmc0_cmd &sdmmc0_dectn &sdmmc0_bus4>;
+	pinctrl-1 = <&sdmmc0_idle>;
+	clocks = <&cru HCLK_SDMMC>, <&cru SCLK_SDMMC>;
+	clock-names = "biu", "ciu";
+	clock-frequency = <100000000>;
+	max-frequency = <100000000>;
+	bus-width = <4>;
+	cap-sd-highspeed;
+	cap-sdio-irq;
+	keep-power-in-suspend;
+	mmc-pwrseq = <&sdio_pwrseq>;
+	non-removable;
+	no-sd;
+	no-mmc;
+	supports-sdio;
+	ignore-pm-notify;
+	supports-UHS_SDR104;
+	sdio_vref = <1800>;	/* 1.8V */
+
+	/* RTL8189ETV-CG设备节点 */
+	rtl8189etv: wifi@1 {
+		compatible = "realtek,rtl8189es";
+		reg = <1>;
+		interrupt-parent = <&gpio0>;
+		interrupts = <19 IRQ_TYPE_EDGE_RISING>;  /* WIFI,host_wake_irq */
+		interrupt-names = "host-wake";
+	};
+};
+
 &gmac2phy {
-	status = "disabled";
+	phy-supply = <&vccio_3v3_reg>;
+	clock_in_out = "output";
+	assigned-clock-rate = <50000000>;
+	assigned-clocks = <&cru SCLK_MAC2PHY>;
+	assigned-clock-parents = <&cru SCLK_MAC2PHY_SRC>;
+	status = "okay";
 };
 
 &gmac2io {
-	assigned-clocks = <&cru SCLK_MAC2IO>, <&cru SCLK_MAC2IO_EXT>;
-	assigned-clock-parents = <&gmac_clkin>, <&gmac_clkin>;
-	clock_in_out = "input";
-	phy-handle = <&rtl8211f>;
-	phy-supply = <&vccio_3v3_reg>;
-	phy-mode = "rgmii";
-	pinctrl-names = "default";
-	pinctrl-0 = <&rgmiim1_pins>;
-	snps,aal;
-	snps,pbl = <0x4>;
-	tx_delay = <0x26>;
-	rx_delay = <0x11>;
-	status = "okay";
-	
-	mdio {
-		compatible = "snps,dwmac-mdio";
-		#address-cells = <1>;
-		#size-cells = <0>;
-
-		rtl8211f: ethernet-phy@0 {
-			reg = <0>;
-			reset-delay-us = <30000>;
-			reset-assert-us = <30000>;
-			reset-deassert-us = <50000>;
-			reset-gpios = <&gpio2 RK_PC1 GPIO_ACTIVE_LOW>;
-		};
-	};
+	status = "disabled";
 };
 
 &gpu {
@@ -270,6 +293,38 @@
 		};
 	};
 
+	wifi {
+		wifi_enable_h: wifi-enable-h {
+		rockchip,pins = <0 RK_PB2 RK_FUNC_GPIO &pcfg_pull_none>;  /* GPIO0_B2 */
+		};
+	};
+
+	sdmmc0 {
+		sdmmc0_clk: sdmmc0-clk {
+		rockchip,pins = <1 RK_PA6 1 &pcfg_pull_none>;
+		};
+		sdmmc0_cmd: sdmmc0-cmd {
+			rockchip,pins = <1 RK_PA4 1 &pcfg_pull_up>;
+		};
+		sdmmc0_dectn: sdmmc0-dectn {
+			rockchip,pins = <1 RK_PA5 1 &pcfg_pull_up>;
+		};
+		sdmmc0_bus4: sdmmc0-bus4 {
+			rockchip,pins = <1 RK_PA0 1 &pcfg_pull_up>,
+					<1 RK_PA1 1 &pcfg_pull_up>,
+					<1 RK_PA2 1 &pcfg_pull_up>,
+					<1 RK_PA3 1 &pcfg_pull_up>;
+		};
+		sdmmc0_idle: sdmmc0-idle {
+			rockchip,pins = <1 RK_PA0 RK_FUNC_GPIO &pcfg_pull_none>,
+					<1 RK_PA1 RK_FUNC_GPIO &pcfg_pull_none>,
+					<1 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>,
+					<1 RK_PA3 RK_FUNC_GPIO &pcfg_pull_none>,
+					<1 RK_PA4 RK_FUNC_GPIO &pcfg_pull_none>,
+					<1 RK_PA5 RK_FUNC_GPIO &pcfg_pull_none>,
+					<1 RK_PA6 RK_FUNC_GPIO &pcfg_pull_none>;
+		};
+    	};
 };
 
 &tsadc {
