@@ -181,7 +181,7 @@
 };
 
 /* SDIO控制器配置 */
-&rksdmmc {
+&sdio {
 	status = "okay";
 	#address-cells = <1>;
 	#size-cells = <0>;
