@@ -58,6 +58,7 @@
 		// reset-gpios = <0xc7 0x12 0x00>;	// WIFI,poweren_gpio
 	};
 
+	/*
 	vcc_sys_12v: vcc-sys-12v-regulator {
 		compatible = "regulator-fixed";
 		regulator-name = "vcc_sys_12v";
@@ -66,6 +67,7 @@
 		regulator-always-on;
 		regulator-boot-on;
 	};
+	*/
 
 	vcc_sys_5v: vcc-sys-5v-regulator {
 		compatible = "regulator-fixed";
@@ -74,7 +76,7 @@
 		regulator-max-microvolt = <5000000>;
 		regulator-always-on;
 		regulator-boot-on;
-		vin-supply = <&vcc_sys_12v>;
+		// vin-supply = <&vcc_sys_12v>;
 	};
 
 	vcc_phy: vcc-phy-regulator {
